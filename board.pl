@@ -1,36 +1,6 @@
-/*white queen - q */
-/*black queen - Q */
-/*white horse - h */
-/*black horse - H */
-/*white bishop - b */
-/*black bishop - B */
-/*white tower - t */
-/*black tower - T */
-
-board([
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  ']
-]).
-
-boardWithPieces([
-['Q','T','t','T','B','T','b','B'],
-['T','H','t','h','T','h','b','Q'],
-['q','h','H','B','h','q','T','Q'],
-['q','B','B','q','b','Q','H','Q'],
-['h','h','T','t','h','B','h','B'],
-['B','H','t','t','b','Q','T','b'],
-['t','q','H','b','q','q','H','Q'],
-['H','b','Q','H','q','t','t','b']
-]).
-
-blackPieces(['Q','T','B','H']).
-whitePieces(['q','t','b','h']).
+:- use_module(library(lists)).
+:- consult(utils).
+:- consult(movements).
 
 start :- boardWithPieces(X), printBoard(X), startGame(X).
 
@@ -58,23 +28,11 @@ elementInPosition(Position,[X|_],X,Position).
 elementInPosition(Position,[_|L],Piece,Cont) :- Cont1 is Cont+1, elementInPosition(Position,L,Piece,Cont1).
 
 
-% ---MAL!---
-% ---MAL!---
-
-
-isDigit(X) :-
-    number(X),
-    X >= 1,
-    X =< 8,
-    !
-    ;
-    fail.
-
-checkValidInputs(ColumnOrigin,ColumnDest) :- ColumnOrigin >= get_code('A'), ColumnOrigin =< get_code('H'), ColumnDest >= get_code('A'), ColumnDest =< get_code('H'),
-												!
-												;
-												write('fodeu!'),
-												fail.
+%checkValidInputs(ColumnOrigin,ColumnDest) :- ColumnOrigin >= get_code('A'), ColumnOrigin =< get_code('H'), ColumnDest >= get_code('A'), ColumnDest =< get_code('H'),
+%												!
+%												;
+%												write('mal!'),
+%												fail.
 
 startGame(Board) :- gameCycle(Board,1).
 
@@ -85,18 +43,17 @@ gameCycle(Board,Player) :- repeat,
       						write('Choose the destination'), nl,
       						write('Column = '), read(ColumnDest), nl,
       						write('Line = '), read(LineDest), isDigit(LineDest), nl,
-      						checkValidInputs(ColumnOrigin,ColumnDest),
+      						checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest),
       						!,
-      						write('sucess').
-    						
-    						%, checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest).
+      						write('end').
 
 
 
+checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :- checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece), checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest).
 
-%checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :- checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin)
-
-%checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin) :- (Player == 1, getPiece(Board,LineOrigin/ColumnOrigin,Piece), member(Piece,blackPieces))
+checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :- (Player == 1 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['Q','T','B','H'])
+														; 
+														Player == 2 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['q','t','b','h'])).
 
 
 

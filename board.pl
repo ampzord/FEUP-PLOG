@@ -49,15 +49,13 @@ gameCycle(Board,Player) :- repeat,
 
 
 
-checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :- checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece), checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest).
+checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :- checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece), checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), write('possibilities: '), write(Poss).
 
 checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :- (Player == 1 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['Q','T','B','H'])
 														; 
 														Player == 2 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['q','t','b','h'])).
 
 
-
-%, checkValidPlay(player,ColumnOrigin,LineOrigin,ColumnDest,LineDest).
 
 %movePiece(player, oldBoard, iniRow, iniCol, endRow, endCol, newBoard) :- 
 % ---MAL!---

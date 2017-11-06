@@ -9,6 +9,17 @@ board([
 ['  ','  ','  ','  ','  ','  ','  ','  ']
 ]).
 
+/*boardWithPieces([
+['Q','T','t','T','B','T','b','B'],
+['T','H','t','h','T','h','b','Q'],
+['q','h','H','B','h','q','T','Q'],
+['q','B','B','q','b','Q','H','Q'],
+['h','h','T','t','h','B','h','B'],
+['B','H','t','t','b','Q','T','b'],
+['t','q','H','b','q','q','H','Q'],
+['H','b','Q','H','q','t','t','b']
+]).*/
+
 boardWithPieces([
 ['Q','T','t','T','B','T','b','B'],
 ['T','H','t','h','T','h','b','Q'],
@@ -17,7 +28,7 @@ boardWithPieces([
 ['h','h','T','t','h','B','h','B'],
 ['B','H','t','t','b','Q','T','b'],
 ['t','q','H','b','q','q','H','Q'],
-['H','b','Q','h','q','t','t','b']
+['H','b','Q',' ',' ','t','t','b']
 ]).
 
 boardHalfMade([
@@ -41,3 +52,6 @@ charToInt('E',Num) :- Num is 5.
 charToInt('F',Num) :- Num is 6.
 charToInt('G',Num) :- Num is 7.
 charToInt('H',Num) :- Num is 8.
+
+print_list([]).
+print_list([A|B]) :- write(A), print_list(B).

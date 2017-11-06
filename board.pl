@@ -1,4 +1,5 @@
 :- use_module(library(lists)).
+:- use_module(library(Package)).
 :- consult(utils).
 :- consult(movements).
 
@@ -28,11 +29,6 @@ elementInPosition(Position,[X|_],X,Position).
 elementInPosition(Position,[_|L],Piece,Cont) :- Cont1 is Cont+1, elementInPosition(Position,L,Piece,Cont1).
 
 
-%checkValidInputs(ColumnOrigin,ColumnDest) :- ColumnOrigin >= get_code('A'), ColumnOrigin =< get_code('H'), ColumnDest >= get_code('A'), ColumnDest =< get_code('H'),
-%												!
-%												;
-%												write('mal!'),
-%												fail.
 
 startGame(Board) :- gameCycle(Board,1).
 
@@ -58,16 +54,4 @@ checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :- (Player == 1 -> cha
 
 
 %movePiece(player, oldBoard, iniRow, iniCol, endRow, endCol, newBoard) :- 
-% ---MAL!---
 
-
-
-%jogar(Xi-Yi/Xf-Yf,Board):-write(Xi).
-
-%jogadaValida
-%jogadaValida(Xi-Yi/Xf-Yf,Board):-dentroCampo(Xi-Yi/Xf-Yf,Board),verificarCor(Xi-Yi/Xf-Yf),verificarPiece(Xi-Yi/Xf-Yf).
-
-%verificarCor(Xi-Yi/Xf-Yf):-eBranca(Xi-Yi),verificarAtacarPreta().
-%verificarCor(Xi-Yi/Xf-Yf):-ePreta(Xi-Yi),verificarAtacarBranca().
-
-%verificarPiece(Xi-Yi/Xf-Yf) :- retornarPiece(Xi-Yi,Piece), podeAtacar(Xi-Yi,Piece,Xf-Yf).

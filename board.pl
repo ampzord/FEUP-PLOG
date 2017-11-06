@@ -21,7 +21,7 @@ printLine(Board,Line,Column):-  write(' '),
 								ColumnAux is Column + 1, 
 								printLine(Board, Line,ColumnAux).
 
-getPiece(Board,Line/Column,Piece):-elementInPosition(Line,Board,L,1), 
+getPiece(Board,Line/Column,Piece):- elementInPosition(Line,Board,L,1), 
 									elementInPosition(Column,L,Piece,1).
 
 elementInPosition(Position,[X|_],X,Position).

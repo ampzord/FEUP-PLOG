@@ -9,7 +9,7 @@ board([
 ['  ','  ','  ','  ','  ','  ','  ','  ']
 ]).
 
-boardWithPieces([
+/*boardWithPieces([
 ['Q','T','t','T','B','T','b','B'],
 ['T','H','t','h','T','h','b','Q'],
 ['q','h','H','B','h','q','T','Q'],
@@ -17,7 +17,18 @@ boardWithPieces([
 ['h','h','T','t','h','B','h','B'],
 ['B','H','t','t','b','Q','T','b'],
 ['t','q','H','b','q','q','H','Q'],
-['H','b','Q','h','q','t','t','b']
+['H','b','Q','H','q','t','t','b']
+]).*/
+
+boardWithPieces([
+['Q','T','t','T','B','T','b','B'],
+['T','H','t','h','T','h','b','Q'],
+['q','h','h','B','h','q','T','Q'],
+[' ','B',' ','q','b','Q','H','Q'],
+['h',' ',' ','t','h','B','h','B'],
+['B','H','Q','t','b','Q','T','b'],
+['t','q',' ',' ','q','q','H','Q'],
+['H','b','t',' ','q','t','t','b']
 ]).
 
 boardHalfMade([
@@ -31,6 +42,13 @@ boardHalfMade([
 ['H','b','Q','H','q','t','t','b']
 ]).
 
+isNotSpace(Cha) :- Cha \= ' '.
+isSpace(Cha) :- Cha == ' '.
+isQueen(Cha) :- Cha == 'Q' ; Cha == 'q'.
+isTower(Cha) :- Cha == 'T' ; Cha == 't'.
+isHorse(Cha) :- Cha == 'H' ; Cha == 'h'.
+isBishop(Cha) :- Cha == 'B' ; Cha == 'b'.
+
 isDigit(X) :- number(X), X >= 1, X =< 8, ! ;fail.
 
 charToInt('A',Num) :- Num is 1.
@@ -41,3 +59,6 @@ charToInt('E',Num) :- Num is 5.
 charToInt('F',Num) :- Num is 6.
 charToInt('G',Num) :- Num is 7.
 charToInt('H',Num) :- Num is 8.
+
+print_list([]).
+print_list([A|B]) :- write(A), print_list(B).

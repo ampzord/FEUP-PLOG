@@ -26,7 +26,7 @@ boardWithPieces([
 ['q','h','h','B','h','q','T','Q'],
 [' ','B',' ','q','b','Q','H','Q'],
 ['h',' ',' ','t','h','B','h','B'],
-['B','H','Q','t','b','Q','T','b'],
+['b',' ','T','t','b','Q','T','b'],
 ['t','q',' ',' ','q','q','H','Q'],
 ['H','b','t',' ','q','t','t','b']
 ]).
@@ -59,6 +59,3 @@ charToInt('E',Num) :- Num is 5.
 charToInt('F',Num) :- Num is 6.
 charToInt('G',Num) :- Num is 7.
 charToInt('H',Num) :- Num is 8.
-
-print_list([]).
-print_list([A|B]) :- write(A), print_list(B).

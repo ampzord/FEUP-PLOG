@@ -1,5 +1,4 @@
 :- use_module(library(lists)).
-:- use_module(library(Package)).
 :- consult(utils).
 :- consult(movements).
 
@@ -44,12 +43,13 @@ gameCycle(Board,Player) :- repeat,
       						write('end').
 
 
+checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :- checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece), 
+																			checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss).
 
-checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :- checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece), checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), write('possibilities: '), write(Poss).
-
-checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :- (Player == 1 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['Q','T','B','H'])
-														; 
-														Player == 2 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['q','t','b','h'])).
+checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :- 
+													(Player == 1 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['Q','T','B','H'])
+													; 
+													Player == 2 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['q','t','b','h'])).
 
 
 

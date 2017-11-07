@@ -1,28 +1,39 @@
-%towerMovement(ColumnOrigin,LineOrigin,Destinations) :- 
+checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- 
+														(isQueen(Piece) -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)
+														;
+														isHorse(Piece) -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)
+														;
+														isTower(Piece) -> checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)
+														;
+														isBishop(Piece) -> checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)).
+
+checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss),
+																				verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss).
 
 
-%horizontalMovement(ColumnOrigin,LineOrigin,)
-
-
-checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,ListofPossibilities) :- ((Piece == 'Q' ; Piece == 'q') -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,ListofPossibilities)
+verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes),
+																			(LineOrigin < LineDest -> 
+																				getVerticalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,Poss)
 																			;
-																			(Piece == 'H' ; Piece == 'h') -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,ListofPossibilities)
-																			;
-																			(Piece == 'T' ; Piece == 't') -> checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,ListofPossibilities)
-																			;
-																			(Piece == 'T' ; Piece == 't') -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,ListofPossibilities)).
+																			getVerticalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,Poss)).
 
-checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,ListofPossibilities) :- horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,ListofPossibilities).
+
+
 																							
 
-horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,ListofPossibilities) :- charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes), 
-																			( ColOr < ColDes -> getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,ListofPossibilities)
-																			;
-																			getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,ListofPossibilities)).
+horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes), 
+														( ColOr < ColDes -> getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,Poss)
+														;
+														getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,Poss)).
 
-getHorizontalPossibilities(Board,ColDes,LineOrigin,ColDes,LineDest,Inc,ListofPossibilities) :- write('l1: '), print_list(ListofPossibilities).
-getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,Inc,ListofPossibilities) :- 
-					ColWitInc is ColOr+Inc, 
-					getPiece(Board,LineOrigin/ColWitInc,Piece), write('l1: '), print_list(ListofPossibilities).
-					( Piece == ' ' -> 
-					getHorizontalPossibilities(Board,ColOr+Inc,LineOrigin,ColDes,LineDest,Inc,append([ColOr+Inc,LineOrigin],ListofPossibilities,ListofPossibilities))).
+
+oneMore(Board,ColWitInc,LineOrigin,ColDes,LineDest,Inc,[[ColWitInc,LineOrigin]|Poss]).
+
+getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,Inc,[[ColWitInc,LineOrigin]|Poss]) :- ColWitInc is ColOr+Inc, 
+					getPiece(Board,LineOrigin/ColWitInc,Piece),
+					(isSpace(Piece) ->
+					getHorizontalPossibilities(Board,ColWitInc,LineOrigin,ColDes,LineDest,Inc,Poss)
+					;
+					write(ColWitInc), oneMore(Board,ColWitInc,LineOrigin,ColDes,LineDest,Inc,Poss)).
+
+getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,Inc,[]).

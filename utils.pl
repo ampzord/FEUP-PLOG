@@ -23,10 +23,10 @@ board([
 boardWithPieces([
 ['Q','T','t','T','B','T','b','B'],
 ['T','H','t','h','T','h','b','Q'],
-['q','h','h','B','h','q','T','Q'],
-[' ','B',' ','q','b','Q','H','Q'],
-['h',' ',' ','t','h','B','h','B'],
-['b',' ','T','t','b','Q','T','b'],
+['q','h','h',' ',' ','q','T','Q'],
+[' ','B',' ','H',' ','Q','H','Q'],
+['h',' ',' ',' ','h','B','h','B'],
+['b',' ',' ','t','b','Q','T','b'],
 ['t','q',' ',' ','q','q','H','Q'],
 ['H','b','t',' ','q','t','t','b']
 ]).
@@ -42,7 +42,7 @@ boardHalfMade([
 ['H','b','Q','H','q','t','t','b']
 ]).
 
-isNotSpace(Cha) :- Cha \= ' '.
+%isNotSpace(Cha) :- Cha \= ' '.
 isSpace(Cha) :- Cha == ' '.
 isQueen(Cha) :- Cha == 'Q' ; Cha == 'q'.
 isTower(Cha) :- Cha == 'T' ; Cha == 't'.

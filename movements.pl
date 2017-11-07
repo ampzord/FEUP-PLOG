@@ -1,11 +1,44 @@
 checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- 
-(isQueen(Piece) -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss), append(HPoss,VPoss,L1), append(OPoss,L1,Poss)
-;
-isHorse(Piece) -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)
-;
-isTower(Piece) -> checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss), append(HPoss,VPoss,Poss), write(Poss), nl
-;
-isBishop(Piece) -> checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss)).
+(
+	isQueen(Piece) -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss), append(HPoss,VPoss,L1), append(OPoss,L1,Poss);
+	isHorse(Piece) -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), write(Poss), nl;
+	isTower(Piece) -> checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss), append(HPoss,VPoss,Poss), write(Poss), nl;
+	isBishop(Piece) -> checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), write(Poss),nl
+).
+
+checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- 
+charToInt(ColumnOrigin,Column),
+Col1 is Column-1,
+Col2 is Column+1,
+Col3 is Column+2,
+Col4 is Column-2,
+Lin1 is LineOrigin-2,
+Lin2 is LineOrigin+2,
+Lin3 is LineOrigin-1,
+Lin4 is LineOrigin+1,
+write('0'), nl,
+addHorsePoss(Board,Col1,Lin1,Poss),
+write('1'), nl,
+addHorsePoss(Board,Col1,Lin2,Poss),
+write('2'), nl,
+addHorsePoss(Board,Col2,Lin1,Poss),
+write('3'), nl,
+addHorsePoss(Board,Col2,Lin2,Poss),
+write('4'), nl,
+addHorsePoss(Board,Col3,Lin3,Poss),
+write('5'), nl,
+addHorsePoss(Board,Col3,Lin4,Poss),
+write('6'), nl,
+addHorsePoss(Board,Col4,Lin4,Poss),
+write('7'), nl,
+addHorsePoss(Board,Col4,Lin3,Poss), write('8'), nl.
+
+addHorsePoss(Board,Col,Lin, [[Lin,Col]|Poss]) :-
+getPiece(Board,Lin/Col,Piece), !, write(Poss), nl.
+
+
+checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss) :-
+obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss).
 
 checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss) :- 
 horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss),

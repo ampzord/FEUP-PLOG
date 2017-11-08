@@ -5,23 +5,27 @@
 start :- boardWithPieces(X), startGame(X).
 
 printBoard(Board):- 
-write('  A B C D E F G H'), nl, 
+write('  | A | B | C | D | E | F | G | H |'), nl,
+write('                                      '), nl,
 printField(Board, 1), 
-write('  A B C D E F G H'), nl, nl, !.
+write('-------------------------------------'), nl,
+write('                                     '), nl,
+write('  | A | B | C | D | E | F | G | H |'), nl, nl, !.
 
 printField(_,9).
 
 printField(Board,Line):- 
+write('-------------------------------------'), nl,
 write(Line), 
 printLine(Board,Line,1), 
-write(' '), write(Line), 
+write(' | '), write(Line), 
 nl, 
 LineAux is Line + 1, 
 printField(Board,LineAux).
 
 printLine(_,_,9).
 printLine(Board,Line,Column):-  
-write(' '), 
+write(' | '), 
 getPiece(Board,Line/Column,Piece), 
 write(Piece), 
 ColumnAux is Column + 1, 
@@ -49,6 +53,7 @@ write('Choose the destination'), nl,
 write('Column = '), read(ColumnDest), nl,
 write('Line = '), read(LineDest), isDigit(LineDest), nl,
 checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest),
+movePiece(Board, ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard),
 !,
 write('fixe').
 
@@ -71,6 +76,7 @@ checkDestinationPiece(Board,Player,ColumnDest,LineDest) :-
 	Player == 1 -> charToInt(ColumnDest,N), getPiece(Board,LineDest/N,Piece), member(Piece,['q','t','b','h'])
 ).
 
+movePiece([Line|Rest], ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard) :-
+swapLine(Line,ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard) 
 
-%movePiece(oldBoard, iniCol, iniRow, endRow, endCol, newBoard) :- 
 

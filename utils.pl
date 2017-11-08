@@ -1,14 +1,3 @@
-board([
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  '],
-['  ','  ','  ','  ','  ','  ','  ','  ']
-]).
-
 /*boardWithPieces([
 ['Q','T','t','T','B','T','b','B'],
 ['T','H','t','h','T','h','b','Q'],
@@ -19,6 +8,17 @@ board([
 ['t','q','H','b','q','q','H','Q'],
 ['H','b','Q','H','q','t','t','b']
 ]).*/
+
+emptyBoard([
+[' ',' ',' ',' ',' ',' ',' ',' '],
+[' ',' ',' ',' ',' ',' ',' ',' '],
+[' ',' ',' ',' ',' ',' ',' ',' '],
+[' ',' ',' ',' ',' ',' ',' ',' '],
+[' ',' ',' ',' ',' ',' ',' ',' '],
+[' ',' ',' ',' ',' ',' ',' ',' '],
+[' ',' ',' ',' ',' ',' ',' ',' '],
+[' ',' ',' ',' ',' ',' ',' ',' ']
+]).
 
 boardWithPieces([
 ['Q','T','t','T','B','T','b','B'],
@@ -59,3 +59,24 @@ charToInt('E',Num) :- Num is 5.
 charToInt('F',Num) :- Num is 6.
 charToInt('G',Num) :- Num is 7.
 charToInt('H',Num) :- Num is 8.
+
+swapPieceOnLine(Array,LineNum,Piece,NewArray) :-
+swapPieceOnLineAux(Array,LineNum,1,Piece,NewArray).
+
+swapPieceOnLineAux([],_,_,_,[]).
+
+swapPieceOnLineAux([_|T1],LineNum,LineNum,Piece,[Piece|T2]):-
+NextLine is LineNum + 1,
+swapPieceOnLineAux(T1,LineNum,NextLine,Piece,T2).
+
+swapPieceOnLineAux([H1|T1],LineNum,CurrLine,Piece,[H1|T2]):-
+NextLine is CurrLine + 1,
+swapPieceOnLineAux(T1,LineNum,NextLine,Piece,T2).
+
+%switchPieceOnBoard([Line|Rest],Col,Lin,Piece,[H|T]) :-
+%checkLine(Line,Col,Lin,1,Piece,H),
+
+
+
+%checkLine([H|L],Col,Lin,ActLine,Piece,NewBoard) :-
+

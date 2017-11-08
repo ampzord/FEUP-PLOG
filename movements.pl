@@ -1,9 +1,9 @@
 checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- 
 (
 	isQueen(Piece) -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss), append(HPoss,VPoss,L1), append(OPoss,L1,Poss);
-	isHorse(Piece) -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), write(Poss), nl;
+	isHorse(Piece) -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), write('poss:'), write(Poss), nl;
 	isTower(Piece) -> checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss), append(HPoss,VPoss,Poss), write(Poss), nl;
-	isBishop(Piece) -> checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), write(Poss),nl
+	isBishop(Piece) ->checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), write(Poss),nl
 ).
 
 checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- 
@@ -16,25 +16,17 @@ Lin1 is LineOrigin-2,
 Lin2 is LineOrigin+2,
 Lin3 is LineOrigin-1,
 Lin4 is LineOrigin+1,
-write('0'), nl,
-addHorsePoss(Board,Col1,Lin1,Poss),
-write('1'), nl,
-addHorsePoss(Board,Col1,Lin2,Poss),
-write('2'), nl,
-addHorsePoss(Board,Col2,Lin1,Poss),
-write('3'), nl,
-addHorsePoss(Board,Col2,Lin2,Poss),
-write('4'), nl,
-addHorsePoss(Board,Col3,Lin3,Poss),
-write('5'), nl,
-addHorsePoss(Board,Col3,Lin4,Poss),
-write('6'), nl,
-addHorsePoss(Board,Col4,Lin4,Poss),
-write('7'), nl,
-addHorsePoss(Board,Col4,Lin3,Poss), write('8'), nl.
+addHorsePoss(Board,Col1,Lin1,Poss1),
+addHorsePoss(Board,Col1,Lin2,Poss2), append(Poss1,Poss2,L),!,
+addHorsePoss(Board,Col2,Lin1,Poss3), append(L,Poss3,L2),!,
+addHorsePoss(Board,Col2,Lin2,Poss4), append(L2,Poss4,L3),!,
+addHorsePoss(Board,Col3,Lin3,Poss5), append(L3,Poss5,L4),!,
+addHorsePoss(Board,Col3,Lin4,Poss6), append(L4,Poss6,L5),!,
+addHorsePoss(Board,Col4,Lin4,Poss7), append(L5,Poss7,L6),!,
+addHorsePoss(Board,Col4,Lin3,Poss8), append(L6,Poss8,Poss),!.
 
-addHorsePoss(Board,Col,Lin, [[Lin,Col]|Poss]) :-
-getPiece(Board,Lin/Col,Piece), !, write(Poss), nl.
+addHorsePoss(Board,Col,Lin, [[Col,Lin]|[]]) :-
+getPiece(Board,Lin/Col,Piece);write('').
 
 
 checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss) :-

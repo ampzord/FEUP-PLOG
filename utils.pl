@@ -72,11 +72,3 @@ swapPieceOnLineAux(T1,LineNum,NextLine,Piece,T2).
 swapPieceOnLineAux([H1|T1],LineNum,CurrLine,Piece,[H1|T2]):-
 NextLine is CurrLine + 1,
 swapPieceOnLineAux(T1,LineNum,NextLine,Piece,T2).
-
-%switchPieceOnBoard([Line|Rest],Col,Lin,Piece,[H|T]) :-
-%checkLine(Line,Col,Lin,1,Piece,H),
-
-
-
-%checkLine([H|L],Col,Lin,ActLine,Piece,NewBoard) :-
-

@@ -52,8 +52,13 @@ write('Line = '), read(LineOrigin), isDigit(LineOrigin), nl,
 write('Choose the destination'), nl,
 write('Column = '), read(ColumnDest), nl,
 write('Line = '), read(LineDest), isDigit(LineDest), nl,
-checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest),
+checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest), !,
 movePiece(Board, ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard),
+(
+	Player == 1 -> NextPlayer is 2;
+	NextPlayer is 1
+),
+gameCycle(RetBoard,NextPlayer),
 !,
 write('fixe').
 
@@ -62,7 +67,7 @@ checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :-
 checkDestinationPiece(Board,Player,ColumnDest,LineDest), 
 checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece),
 checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss),
-charToInt(ColumnDest,Col), member([Col,LineDest],Poss).
+charToInt(ColumnDest,Col), write('poss:'), write(Poss), nl, member([Col,LineDest],Poss).
 
 checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :- 
 (
@@ -76,7 +81,19 @@ checkDestinationPiece(Board,Player,ColumnDest,LineDest) :-
 	Player == 1 -> charToInt(ColumnDest,N), getPiece(Board,LineDest/N,Piece), member(Piece,['q','t','b','h'])
 ).
 
-movePiece([Line|Rest], ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard) :-
-swapLine(Line,ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard) 
+movePiece(Board, ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard) :- 
+getPiece(Board,LineOrigin/ColumnOrigin,Piece), 
+swapFirstPiece(Board,1,ColumnOrigin,LineOrigin,' ',RetBoard).
+
+swapFirstPiece([],_,_,_,_,[]).
+
+swapFirstPiece([Board|Rest],ColumnOrigin,ColumnOrigin,LineOrigin,PieceToReplace,[L|RetBoard]) :-
+NextColumn is CurrColumn+1,
+swapPieceOnLine(Board,LineOrigin,' ',L),
+swapFirstPiece(Rest,NextColumn,ColumnOrigin,LineOrigin,PieceToReplace,RetBoard).
+
+swapFirstPiece([Board|Rest],CurrColumn,ColumnOrigin,LineOrigin,PieceToReplace,[Board|RetBoard]) :- 
+NextColumn is CurrColumn+1,
+swapFirstPiece(Rest,NextColumn,ColumnOrigin,LineOrigin,PieceToReplace,RetBoard).
 
 

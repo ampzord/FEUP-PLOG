@@ -1,6 +1,6 @@
 checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- 
 (
-	isQueen(Piece) -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss), append(HPoss,VPoss,L1), append(OPoss,L1,Poss);
+	isQueen(Piece) -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss), !, append(HPoss,VPoss,L1), append(OPoss,L1,Poss); %, write('poss:'), write(Poss)
 	isHorse(Piece) -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss);
 	isTower(Piece) -> checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss), append(HPoss,VPoss,Poss);
 	isBishop(Piece) ->checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)
@@ -36,10 +36,10 @@ checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss
 horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss),
 verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,VPoss).
 
-checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss) :-
-horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss),
-verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,VPoss),
-obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss).
+checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss) :- %write(ColumnDest), write(LineDest), write('1'), nl,
+horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss), !, %write(HPoss), nl,
+verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,VPoss), !, %write(VPoss), nl,
+obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss), !. %, write(OPoss), nl.
 
 obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss) :-
 charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes),
@@ -47,7 +47,8 @@ charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes),
 	ColOr < ColDes, LineOrigin < LineDest -> getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,1,OPoss);
 	ColOr > ColDes, LineOrigin > LineDest -> getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,-1,OPoss);
 	ColOr < ColDes, LineOrigin > LineDest -> getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,-1,OPoss);
-	getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,1,OPoss)
+	ColOr > ColDes, LineOrigin < LineDest -> getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,1,OPoss);
+	OPoss = []
 ).
 
 oneMoreObl(Board,ColWitInc,LineWithInc,ColDes,LineDest,ColInc,LineInc,[[ColWitInc,LineWithInc]|[]]).
@@ -64,11 +65,15 @@ getPiece(Board,LineWithInc/ColWitInc,Piece),
 getObliquePossibilities(_,_,_,_,_,_,[]).																									
 
 horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :-
-charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes), 
-(
-	ColOr < ColDes -> getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,Poss);
-	getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,Poss)
-).
+	write('Inside Horizontal Movement'), nl,
+	write('Column Origin:'), write(ColumnOrigin), nl,
+	write('ColOr: '), write(ColOr), nl,
+	charToInt(ColumnOrigin,ColOr), write('After charToInt ColumnOrigin,ColOr'), nl,charToInt(ColumnDest,ColDes), write('After charToInt(ColumnDest,ColDes)'), nl,
+	(
+		ColOr < ColDes -> write('Inside if ColOr < ColDes'), nl, getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,Poss), write('Inside getHorizontalPossibilities'), nl;
+		getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,Poss),
+		write('Inside 2nd getHorizontalPossibilities'), nl
+	).
 
 
 oneMoreHor(Board,ColWitInc,LineOrigin,ColDes,LineDest,Inc,[[ColWitInc,LineOrigin]|[]]).

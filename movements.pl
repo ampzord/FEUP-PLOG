@@ -44,19 +44,21 @@ obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss).
 obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss) :-
 charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes),
 (
-	ColOr < ColDes, LineOrigin < LineDest -> getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,OPoss);
-	getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,OPoss)
+	ColOr < ColDes, LineOrigin < LineDest -> getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,1,OPoss);
+	ColOr > ColDes, LineOrigin > LineDest -> getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,-1,OPoss);
+	ColOr < ColDes, LineOrigin > LineDest -> getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,-1,OPoss);
+	getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,1,OPoss)
 ).
 
-oneMoreObl(Board,ColWitInc,LineWithInc,ColDes,LineDest,Inc,[[ColWitInc,LineWithInc]|[]]).
+oneMoreObl(Board,ColWitInc,LineWithInc,ColDes,LineDest,ColInc,LineInc,[[ColWitInc,LineWithInc]|[]]).
 
-getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,Inc,[[ColWitInc,LineWithInc]|OPoss]) :-
-LineWithInc is LineOrigin+Inc,
-ColWitInc is ColOr+Inc,
+getObliquePossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,ColInc,LineInc,[[ColWitInc,LineWithInc]|OPoss]) :-
+LineWithInc is LineOrigin+LineInc,
+ColWitInc is ColOr+ColInc,
 getPiece(Board,LineWithInc/ColWitInc,Piece),
 (
-	isSpace(Piece) -> getObliquePossibilities(Board,ColWitInc,LineWithInc,ColDes,LineDest,Inc,OPoss);
-	oneMoreObl(Board,ColWitInc,LineWithInc,ColDes,LineDest,Inc,OPoss)
+	isSpace(Piece) -> getObliquePossibilities(Board,ColWitInc,LineWithInc,ColDes,LineDest,ColInc,LineInc,OPoss);
+	oneMoreObl(Board,ColWitInc,LineWithInc,ColDes,LineDest,ColInc,LineInc,OPoss)
 ).
 
 getObliquePossibilities(_,_,_,_,_,_,[]).																									

@@ -51,23 +51,28 @@ write('Column = '), read(ColumnOrigin), nl,
 write('Line = '), read(LineOrigin), isDigit(LineOrigin), nl,
 write('Choose the destination'), nl,
 write('Column = '), read(ColumnDest), nl,
-write('Line = '), read(LineDest), isDigit(LineDest), nl,
-checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest), !,
-movePiece(Board, ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard),
+write('Line = '), read(LineDest), isDigit(LineDest),
+checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest),
+charToInt(ColumnOrigin,ColOrigin),
+write('Original Column:'), write(ColumnOrigin), write(' / Original Line:'), write(LineOrigin),nl,
+getPiece(Board,LineOrigin/ColOrigin,PieceOrigin), write('Piece: '), write(PieceOrigin), nl,
+write('Destination Column:'), write(ColumnDest), write(' / Destination Line:'), write(LineDest),nl,
+movePiece(Board, ColumnOrigin, LineOrigin,' ', RetBoard),
+movePiece(RetBoard,ColumnDest,LineDest,PieceOrigin,RetRetBoard),
 (
 	Player == 1 -> NextPlayer is 2;
 	NextPlayer is 1
 ),
-gameCycle(RetBoard,NextPlayer),
+gameCycle(RetRetBoard,NextPlayer),
 !,
 write('fixe').
 
 
 checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :- 
-checkDestinationPiece(Board,Player,ColumnDest,LineDest), 
+checkDestinationPiece(Board,Player,ColumnDest,LineDest),
 checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece),
-checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss),
-charToInt(ColumnDest,Col), write('poss:'), write(Poss), nl, member([Col,LineDest],Poss).
+checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), !,
+charToInt(ColumnDest,Col), member([Col,LineDest],Poss). % write('poss:'), write(Poss), 
 
 checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :- 
 (
@@ -81,19 +86,19 @@ checkDestinationPiece(Board,Player,ColumnDest,LineDest) :-
 	Player == 1 -> charToInt(ColumnDest,N), getPiece(Board,LineDest/N,Piece), member(Piece,['q','t','b','h'])
 ).
 
-movePiece(Board, ColumnOrigin, LineOrigin, ColumnDest, LineDest, RetBoard) :- 
-getPiece(Board,LineOrigin/ColumnOrigin,Piece), 
-swapFirstPiece(Board,1,ColumnOrigin,LineOrigin,' ',RetBoard).
+movePiece(Board, Column, Line, Piece, RetBoard) :- 
+charToInt(Column,Col),
+swapFirstPiece(Board,1,Col,Line,Piece, RetBoard).
 
 swapFirstPiece([],_,_,_,_,[]).
 
-swapFirstPiece([Board|Rest],ColumnOrigin,ColumnOrigin,LineOrigin,PieceToReplace,[L|RetBoard]) :-
-NextColumn is CurrColumn+1,
-swapPieceOnLine(Board,LineOrigin,' ',L),
-swapFirstPiece(Rest,NextColumn,ColumnOrigin,LineOrigin,PieceToReplace,RetBoard).
+swapFirstPiece([Board|Rest],Line,Col,Line,PieceToReplace,[L|RetBoard]) :-
+NextLine is Line+1,
+swapPieceOnLine(Board,Col,PieceToReplace,L), 
+swapFirstPiece(Rest,NextLine,Col,Line,PieceToReplace,RetBoard).
 
-swapFirstPiece([Board|Rest],CurrColumn,ColumnOrigin,LineOrigin,PieceToReplace,[Board|RetBoard]) :- 
-NextColumn is CurrColumn+1,
-swapFirstPiece(Rest,NextColumn,ColumnOrigin,LineOrigin,PieceToReplace,RetBoard).
+swapFirstPiece([Board|Rest],CurrLine,Col,Line,PieceToReplace,[Board|RetBoard]) :- 
+NextLine is CurrLine+1,
+swapFirstPiece(Rest,NextLine,Col,Line,PieceToReplace,RetBoard).
 
 

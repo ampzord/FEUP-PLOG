@@ -1,1 +1,0 @@
-appendList(X,[_|L1]) :- append(X,L1).

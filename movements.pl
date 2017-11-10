@@ -7,12 +7,12 @@ checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :
 ).
 
 checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :-
-	write('ColumnOrigin:'), write(ColumnOrigin), nl,
-	write('LineOrigin:'), write(LineOrigin), nl,
-	write('ColumnDest:'), write(ColumnDest), nl,
-	write('LineDest:'), write(LineDest), nl,
+	%write('ColumnOrigin:'), write(ColumnOrigin), nl,
+	%write('LineOrigin:'), write(LineOrigin), nl,
+	%write('ColumnDest:'), write(ColumnDest), nl,
+	%write('LineDest:'), write(LineDest), nl,
 	charToInt(ColumnOrigin,Column),
-	write('Column:'), write(Column), nl,
+	%write('Column:'), write(Column), nl,
 	Col1 is Column-1,
 	Col2 is Column+1,
 	Col3 is Column+2,

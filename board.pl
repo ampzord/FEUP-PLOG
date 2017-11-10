@@ -44,14 +44,16 @@ elementInPosition(Position,[_|L],Piece,Cont) :-
 
 
 
-startGame(Board) :- gameCycle(Board,1).
+startGame(Board) :- gameCycle(Board,1,Value).
 
-gameCycle(Board,Player) :- 
+gameCycle(Board,Player,Value) :- 
 	repeat,
 	printBoard(Board),
 	\+gameOver(Board,Winner),
-	\+getPiecesThroughBoardLine(Board,1,Counter),
-	write('Counter: '), write(Counter), nl,
+	%gameOverByMoves(Board,Player,Winner),
+	getPiecesThroughBoardLine(Board,1,Value),
+	write('Value: '), write(Value), nl,
+	%Value == 1,
 	write('Player '),  write(Player), write(' choose a piece'), nl,
 	write('Column = '), read(ColumnOrigin), nl,
 	write('Line = '), read(LineOrigin), isDigit(LineOrigin), nl,
@@ -69,9 +71,16 @@ gameCycle(Board,Player) :-
 		Player == 1 -> NextPlayer is 2;
 		NextPlayer is 1
 	),
-	gameCycle(RetRetBoard,NextPlayer),
+	gameCycle(RetRetBoard,NextPlayer,Value),
 	!.
 
+gameCycle(Board,Player,Value) :- 
+	Value \= 1, write('GAME ENDED BITCHES'), nl.
+
+gameOverByMoves(Board,Player,Winner):-
+	getPiecesThroughBoardLine(Board,1,Value),
+	Value \= 1,
+	write('Game ended because player cant kill the enemy'), nl.
 
 %gameCycle(Board,Player) :-
  %       gameOver(Board,Winner),
@@ -112,7 +121,7 @@ NextLine is CurrLine+1,
 swapFirstPiece(Rest,NextLine,Col,Line,PieceToReplace,RetBoard).
 
 %added by amp
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 gameOver(Board,Winner):-
 		\+checkIfBlackPlayerHasPieces(Board), write('winner is 2, pecas pekenas'), Winner is 2, abort.
 
@@ -137,6 +146,82 @@ pieceExistsOnBoard(P,[L|_]):-
 
 pieceExistsOnBoard(P, [_|T]):-
 	pieceExistsOnBoard(P,T).
+
+%NEW YEAR NEW PREDICATES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+getPiecesThroughBoardLine(_,9,_).
+
+
+getPiecesThroughBoardLine(Board,Line,Value):- 
+	getPiecesAuxThroughCol(Board,Line,1,Value),
+	Value == 1,
+	LineAux is Line + 1, 
+	getPiecesThroughBoardLine(Board,LineAux,Value).
+
+%NAO SEI COMO ISTO AKI FUNCIONA DA SEM E COM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%getPiecesThroughBoardLine(Board,Line,Value):- 
+	%Value == 1.
+
+getPiecesAuxThroughCol(_,_,9,_).
+
+getPiecesAuxThroughCol(Board,Line,Column,Value):-
+	intToChar(Column,ColumnChar),  
+	getPiece(Board,Line/Column,Piece),
+	%write('Line: '), write(Line), nl,
+	%write('Column: '), write(Column), nl, 
+	%write('Peca: '), write(Piece), nl,
+	%write('Before getAllPossibilities'), nl,
+	getAllPossibilities(Board,Line,ColumnChar,Piece,PossiblePlays),
+	%write('After getAllPossibilitiesssssss'), nl,
+	isAValidPlay(Board,PossiblePlays,Value),
+	Value == 1, 
+	ColumnAux is Column + 1, 	
+	getPiecesAuxThroughCol(Board, Line,ColumnAux,Value).
+
+getPiecesAuxThroughCol(Board,Line,Column,Value):-
+	Value == 1.
+
+
+%%%%%%above is all gucci
+
+getAllPossibilities(Board,LineOrigin,ColumnOrigin,Piece,PossiblePlays):-
+	(
+		isBlackHorse(Piece) -> ( 
+									checkHorseMovement(Board,ColumnOrigin,LineOrigin,1,1,Poss),
+									write('Possibilities of Horse: '), write(Poss), nl,
+									append(Poss,[],PossiblePlays)
+								);
+		isSpace(Piece);
+		isWhiteQueen(Piece)				
+	).
+
+isAValidPlay(_,[],_):-
+	write('Empty list case.'), nl.
+
+isAValidPlay(Board,[Head|Tail],Value):-
+	write('List inside isAValidPlay : '), nl,
+	write('Head :'), write(Head), nl,
+	write('Tail :'), write(Tail), nl,
+	nth1(2,Head,LineObtained),
+	write('LineObtained: '), write(LineObtained), nl,
+	nth1(1,Head,ColumnObtained),
+	write('ColumnObtained: '), write(ColumnObtained), nl,
+	getPiece(Board,LineObtained/ColumnObtained,Piece),
+	write('Peca dentro de isAValidPlay: '), write(Piece), nl,
+	(
+		isEnemyPiece(Piece) -> ( write('Dentro do isEnemyPiece if.'), nl, Value is 1)
+	),
+	isAValidPlay(Board,Tail,Value).
+	
+
+
+
+
+%old code before refactoring
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 /*
 doesntExistValidPlay(_,[],Answer).
@@ -195,77 +280,6 @@ checkAllPossibilities(Board,ColumnOrigin,LineOrigin, Piece, OldList, NewList):-
 
 	).
 */
-	
-
-
-
-
-%NEW YEAR NEW PREDICATES
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-getPiecesThroughBoardLine(_,9,_).
-
-getPiecesThroughBoardLine(Board,Line,Counter):- 
-	getPiecesAuxThroughCol(Board,Line,1,Counter), 
-	LineAux is Line + 1, 
-	getPiecesThroughBoardLine(Board,LineAux,Counter).
-
-getPiecesAuxThroughCol(_,_,9).
-
-getPiecesAuxThroughCol(Board,Line,Column,Counter):-
-	intToChar(Column,ColumnChar),  
-	getPiece(Board,Line/Column,Piece),
-	%write('Line: '), write(Line), nl,
-	%write('Column: '), write(Column), nl, 
-	%write('Peca: '), write(Piece), nl,
-	getAllPossibilities(Board,Line,ColumnChar,Piece,PossiblePlays),
-	isAValidPlay(Board,PossiblePlays,0,Counter),
-	write('Counter (inside getPiecesAuxThroughCol: '), write(Counter), nl,
-	Counter \= 0,
-	fail, %SAIR DAKI SE ISTO ACONTECER FODASSE
-	ColumnAux is Column + 1, 	
-	getPiecesAuxThroughCol(Board, Line,ColumnAux,Counter).
-
-
-%%%%%%above is all gucci
-
-getAllPossibilities(Board, LineOrigin, ColumnOrigin, Piece,PossiblePlays):-
-	(
-		isBlackHorse(Piece) -> ( 
-									checkHorseMovement(Board,ColumnOrigin,LineOrigin,1,1,Poss),
-									write('Possibilities of Horse: '), write(Poss), nl,
-									append(Poss,[],PossiblePlays)
-								);
-		isSpace(Piece);
-		isWhiteQueen(Piece)				
-	).
-
-isAValidPlay(_,[],_).
-
-isAValidPlay(Board,[Head|Tail],OldCounter,NewCounter):-
-	nth1(2,Head,LineObtained),
-	nth1(1,Head,ColumnObtained),
-	getPiece(Board,LineObtained/ColumnObtained,Piece),
-	write('Peca dentro de validPlay: '), write(Piece), nl,
-	(
-		isEnemyPiece(Piece),
-		NewCounter is OldCounter+1
-	);
-	(
-		isSpace(Piece);
-		isOwnPiece(Piece)
-	);
-	isAValidPlay(Board,Tail,NewCounter).
-
-
-
-
-
-
-
-
-
-
 
 
 

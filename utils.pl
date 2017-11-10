@@ -32,11 +32,11 @@ boardWithPieces([
 ]).
 
 boardAmp([
-['H',' ',' ',' ',' ',' ',' ',' '],
+[' ',' ',' ',' ','H',' ',' ',' '],
+[' ',' ','q',' ',' ',' ',' ',' '],
 [' ',' ',' ',' ',' ',' ',' ',' '],
-[' ',' ',' ',' ','T',' ',' ',' '],
 [' ',' ',' ',' ',' ',' ',' ',' '],
-[' ',' ',' ',' ',' ','t',' ',' '],
+[' ',' ',' ',' ',' ',' ',' ',' '],
 [' ',' ',' ',' ',' ',' ',' ',' '],
 [' ',' ',' ',' ',' ',' ',' ',' '],
 [' ',' ',' ',' ',' ',' ',' ',' ']
@@ -60,6 +60,10 @@ isTower(Cha) :- Cha == 'T' ; Cha == 't'.
 isHorse(Cha) :- Cha == 'H' ; Cha == 'h'.
 isBishop(Cha) :- Cha == 'B' ; Cha == 'b'.
 
+isEnemyPiece(Cha):- Cha == 'b'; Cha == 't'; Cha == 'q'; Cha == 'h'.
+
+isOwnPiece(Cha):- Cha == 'B'; Cha == 'T'; Cha == 'Q'; Cha == 'H'.
+
 isDigit(X) :- number(X), X >= 1, X =< 8, ! ;fail.
 
 charToInt('A',Num) :- Num is 1.
@@ -70,6 +74,15 @@ charToInt('E',Num) :- Num is 5.
 charToInt('F',Num) :- Num is 6.
 charToInt('G',Num) :- Num is 7.
 charToInt('H',Num) :- Num is 8.
+
+intToChar(1,NewChar) :- NewChar = 'A'.
+intToChar(2,NewChar) :- NewChar = 'B'.
+intToChar(3,NewChar) :- NewChar = 'C'.
+intToChar(4,NewChar) :- NewChar = 'D'.
+intToChar(5,NewChar) :- NewChar = 'E'.
+intToChar(6,NewChar) :- NewChar = 'F'.
+intToChar(7,NewChar) :- NewChar = 'G'.
+intToChar(8,NewChar) :- NewChar = 'H'.
 
 swapPieceOnLine(Array,LineNum,Piece,NewArray) :-
 swapPieceOnLineAux(Array,LineNum,1,Piece,NewArray).

@@ -6,27 +6,32 @@ checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :
 	isBishop(Piece) ->checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)
 ).
 
-checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- 
-charToInt(ColumnOrigin,Column),
-Col1 is Column-1,
-Col2 is Column+1,
-Col3 is Column+2,
-Col4 is Column-2,
-Lin1 is LineOrigin-2,
-Lin2 is LineOrigin+2,
-Lin3 is LineOrigin-1,
-Lin4 is LineOrigin+1,
-addHorsePoss(Board,Col1,Lin1,Poss1),
-addHorsePoss(Board,Col1,Lin2,Poss2), append(Poss1,Poss2,L),!,
-addHorsePoss(Board,Col2,Lin1,Poss3), append(L,Poss3,L2),!,
-addHorsePoss(Board,Col2,Lin2,Poss4), append(L2,Poss4,L3),!,
-addHorsePoss(Board,Col3,Lin3,Poss5), append(L3,Poss5,L4),!,
-addHorsePoss(Board,Col3,Lin4,Poss6), append(L4,Poss6,L5),!,
-addHorsePoss(Board,Col4,Lin4,Poss7), append(L5,Poss7,L6),!,
-addHorsePoss(Board,Col4,Lin3,Poss8), append(L6,Poss8,Poss),!.
+checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :-
+	write('ColumnOrigin:'), write(ColumnOrigin), nl,
+	write('LineOrigin:'), write(LineOrigin), nl,
+	write('ColumnDest:'), write(ColumnDest), nl,
+	write('LineDest:'), write(LineDest), nl,
+	charToInt(ColumnOrigin,Column),
+	write('Column:'), write(Column), nl,
+	Col1 is Column-1,
+	Col2 is Column+1,
+	Col3 is Column+2,
+	Col4 is Column-2,
+	Lin1 is LineOrigin-2,
+	Lin2 is LineOrigin+2,
+	Lin3 is LineOrigin-1,
+	Lin4 is LineOrigin+1,
+	addHorsePoss(Board,Col1,Lin1,Poss1),
+	addHorsePoss(Board,Col1,Lin2,Poss2), append(Poss1,Poss2,L),!,
+	addHorsePoss(Board,Col2,Lin1,Poss3), append(L,Poss3,L2),!,
+	addHorsePoss(Board,Col2,Lin2,Poss4), append(L2,Poss4,L3),!,
+	addHorsePoss(Board,Col3,Lin3,Poss5), append(L3,Poss5,L4),!,
+	addHorsePoss(Board,Col3,Lin4,Poss6), append(L4,Poss6,L5),!,
+	addHorsePoss(Board,Col4,Lin4,Poss7), append(L5,Poss7,L6),!,
+	addHorsePoss(Board,Col4,Lin3,Poss8), append(L6,Poss8,Poss),!.
 
 addHorsePoss(Board,Col,Lin, [[Col,Lin]|[]]) :-
-getPiece(Board,Lin/Col,Piece);write('').
+	getPiece(Board,Lin/Col,Piece);write('').
 
 
 checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss) :-
@@ -67,8 +72,8 @@ getObliquePossibilities(_,_,_,_,_,_,[]).
 horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :-
 	write('Inside Horizontal Movement'), nl,
 	write('Column Origin:'), write(ColumnOrigin), nl,
-	write('ColOr: '), write(ColOr), nl,
-	charToInt(ColumnOrigin,ColOr), write('After charToInt ColumnOrigin,ColOr'), nl,charToInt(ColumnDest,ColDes), write('After charToInt(ColumnDest,ColDes)'), nl,
+	charToInt(ColumnOrigin,ColOr), 
+		write('ColOr: '), write(ColOr), nl, charToInt(ColumnDest,ColDes), write('After charToInt(ColumnDest,ColDes)'), nl,
 	(
 		ColOr < ColDes -> write('Inside if ColOr < ColDes'), nl, getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,Poss), write('Inside getHorizontalPossibilities'), nl;
 		getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,Poss),

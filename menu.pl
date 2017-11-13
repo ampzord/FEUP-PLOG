@@ -17,9 +17,9 @@ startMenu :-
 	read(MenuOption),
 	(
 		MenuOption == 1 -> clearScreen, start;
-		MenuOption == 2 -> write('player vs computer'), nl;
-		MenuOption == 3 -> write('computer vs computer'), nl;
-		MenuOption == 4 -> write('Exiting Program...'), nl;
+		MenuOption == 2 -> clearScreen, write('computer vs player');
+		MenuOption == 3 -> clearScreen, write('computer vs computer'), nl;
+		MenuOption == 4 -> clearScreen, write('Exiting Program...'), nl;
 
 		startMenu
 	).

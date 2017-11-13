@@ -1,18 +1,13 @@
 checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :- 
 (
-	isQueen(Piece) -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss), !, append(HPoss,VPoss,L1), append(OPoss,L1,Poss); %, write('poss:'), write(Poss)
+	isQueen(Piece) -> checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss), !, append(HPoss,VPoss,L1), append(OPoss,L1,Poss);
 	isHorse(Piece) -> checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss);
 	isTower(Piece) -> checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss), append(HPoss,VPoss,Poss);
-	isBishop(Piece) ->checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)
+	isBishop(Piece) -> checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss)
 ).
 
 checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :-
-	%write('ColumnOrigin:'), write(ColumnOrigin), nl,
-	%write('LineOrigin:'), write(LineOrigin), nl,
-	%write('ColumnDest:'), write(ColumnDest), nl,
-	%write('LineDest:'), write(LineDest), nl,
 	charToInt(ColumnOrigin,Column),
-	%write('Column:'), write(Column), nl,
 	Col1 is Column-1,
 	Col2 is Column+1,
 	Col3 is Column+2,
@@ -21,6 +16,7 @@ checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :-
 	Lin2 is LineOrigin+2,
 	Lin3 is LineOrigin-1,
 	Lin4 is LineOrigin+1,
+
 	addHorsePoss(Board,Col1,Lin1,Poss1),
 	addHorsePoss(Board,Col1,Lin2,Poss2), append(Poss1,Poss2,L),!,
 	addHorsePoss(Board,Col2,Lin1,Poss3), append(L,Poss3,L2),!,
@@ -33,7 +29,6 @@ checkHorseMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :-
 addHorsePoss(Board,Col,Lin, [[Col,Lin]|[]]) :-
 	getPiece(Board,Lin/Col,Piece);write('').
 
-
 checkBishopMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss) :-
 obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss).
 
@@ -41,10 +36,10 @@ checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss
 horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss),
 verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,VPoss).
 
-checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss) :- %write(ColumnDest), write(LineDest), write('1'), nl,
-horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss), !, %write(HPoss), nl,
-verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,VPoss), !, %write(VPoss), nl,
-obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss), !. %, write(OPoss), nl.
+checkQueenMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss,VPoss,OPoss) :-
+horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,HPoss), !, 
+verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,VPoss), !, 
+obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss), !. 
 
 obliqueMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,OPoss) :-
 charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes),
@@ -70,16 +65,12 @@ getPiece(Board,LineWithInc/ColWitInc,Piece),
 getObliquePossibilities(_,_,_,_,_,_,[]).																									
 
 horizontalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss) :-
-	write('Inside Horizontal Movement'), nl,
-	write('Column Origin:'), write(ColumnOrigin), nl,
 	charToInt(ColumnOrigin,ColOr), 
-		write('ColOr: '), write(ColOr), nl, charToInt(ColumnDest,ColDes), write('After charToInt(ColumnDest,ColDes)'), nl,
+	charToInt(ColumnDest,ColDes),
 	(
-		ColOr < ColDes -> write('Inside if ColOr < ColDes'), nl, getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,Poss), write('Inside getHorizontalPossibilities'), nl;
-		getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,Poss),
-		write('Inside 2nd getHorizontalPossibilities'), nl
+		ColOr < ColDes -> getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,Poss);
+						  getHorizontalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,Poss)
 	).
-
 
 oneMoreHor(Board,ColWitInc,LineOrigin,ColDes,LineDest,Inc,[[ColWitInc,LineOrigin]|[]]).
 
@@ -96,9 +87,11 @@ getHorizontalPossibilities(_,_,_,_,_,_,[]).
 
 verticalMovement(Board,ColumnOrigin,LineOrigin,ColumnDest,LineDest,VPoss) :- 
 charToInt(ColumnOrigin,ColOr), charToInt(ColumnDest,ColDes),
-(LineOrigin < LineDest -> getVerticalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,VPoss)
-;
-getVerticalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,VPoss)).
+(
+		LineOrigin < LineDest -> getVerticalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,1,VPoss)
+								 ;
+								getVerticalPossibilities(Board,ColOr,LineOrigin,ColDes,LineDest,-1,VPoss)
+).
 
 oneMoreVer(Board,ColOr,LineWithInc,ColDes,LineDest,Inc,[[ColOr,LineWithInc]|[]]).
 

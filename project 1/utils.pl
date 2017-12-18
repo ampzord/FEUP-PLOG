@@ -86,12 +86,12 @@ isWhiteTower(Cha) :- Cha == 't'.
 isWhiteBishop(Cha) :- Cha == 'b'.
 isWhiteHorse(Cha) :- Cha == 'h'.
 
-ifElse(Cond,Then,_Else) :-
+ifThenElse(Cond,Then,_Else) :-
   Cond,
   !,
   Then.
 
-ifElse(Cond,_Then,Else) :-
+ifThenElse(Cond,_Then,Else) :-
   \+Cond,
   !,
   Else.

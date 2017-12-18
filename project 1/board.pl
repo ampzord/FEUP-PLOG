@@ -7,41 +7,41 @@
 
 start :- emptyBoard(X), startGame(X).
 
-printBoard(Board):- 
+printBoard(Board):-
 write('  | A | B | C | D | E | F | G | H |'), nl,
 write('                                      '), nl,
-printField(Board, 1), 
+printField(Board, 1),
 write('-------------------------------------'), nl,
 write('                                     '), nl,
 write('  | A | B | C | D | E | F | G | H |'), nl, nl.
 
 printField(_,9).
 
-printField(Board,Line):- 
+printField(Board,Line):-
 	write('-------------------------------------'), nl,
-	write(Line), 
-	printLine(Board,Line,1), 
-	write(' | '), write(Line), 
-	nl, 
-	LineAux is Line + 1, 
+	write(Line),
+	printLine(Board,Line,1),
+	write(' | '), write(Line),
+	nl,
+	LineAux is Line + 1,
 	printField(Board,LineAux).
 
 printLine(_,_,9).
 
-printLine(Board,Line,Column):-  
-	write(' | '), 
-	getPiece(Board,Line/Column,Piece), 
-	write(Piece), 
-	ColumnAux is Column + 1, 	
+printLine(Board,Line,Column):-
+	write(' | '),
+	getPiece(Board,Line/Column,Piece),
+	write(Piece),
+	ColumnAux is Column + 1,
 	printLine(Board, Line,ColumnAux).
 
-getPiece(Board,Line/Column,Piece):- 
-	elementInPosition(Line,Board,L,1), 
+getPiece(Board,Line/Column,Piece):-
+	elementInPosition(Line,Board,L,1),
 	elementInPosition(Column,L,Piece,1).
 
 elementInPosition(Position,[X|_],X,Position).
-elementInPosition(Position,[_|L],Piece,Cont):- 
-	Cont1 is Cont+1, 
+elementInPosition(Position,[_|L],Piece,Cont):-
+	Cont1 is Cont+1,
 	elementInPosition(Position,L,Piece,Cont1).
 
 startGame(Board) :- gameCycle(Board,1).
@@ -62,7 +62,7 @@ gameCycle(Board,Player) :-
 	write('Line = '), read(LineDest), isDigit(LineDest), nl,
 	checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest),
 	charToInt(ColumnOrigin,ColOrigin),
-	getPiece(Board,LineOrigin/ColOrigin,PieceOrigin), 
+	getPiece(Board,LineOrigin/ColOrigin,PieceOrigin),
 	movePiece(Board, ColumnOrigin, LineOrigin,' ', RetBoard),
 	movePiece(RetBoard,ColumnDest,LineDest,PieceOrigin,RetRetBoard),
 	(
@@ -75,25 +75,25 @@ gameOverByMoves(Board,Player,Winner):-
 	getPiecesThroughBoardLine(Board,1,Value),
 	write('Game ended because player cant kill the enemy'), nl.
 
-checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :- 
+checkValidPlay(Board,Player,ColumnOrigin,LineOrigin,ColumnDest,LineDest) :-
 	checkDestinationPiece(Board,Player,ColumnDest,LineDest),
 	checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece),
 	checkDestination(Board,Piece,ColumnOrigin,LineOrigin,ColumnDest,LineDest,Poss), !,
 	charToInt(ColumnDest,Col), member([Col,LineDest],Poss).
 
-checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :- 
+checkOwnPiece(Board,Player,ColumnOrigin,LineOrigin,Piece) :-
 (
-	Player == 1 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['Q','T','B','H']); 
+	Player == 1 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['Q','T','B','H']);
 	Player == 2 -> charToInt(ColumnOrigin,N), getPiece(Board,LineOrigin/N,Piece), member(Piece,['q','t','b','h'])
 ).
 
 checkDestinationPiece(Board,Player,ColumnDest,LineDest) :-
 (
-	Player == 2 -> charToInt(ColumnDest,N), getPiece(Board,LineDest/N,Piece), member(Piece,['Q','T','B','H']); 
+	Player == 2 -> charToInt(ColumnDest,N), getPiece(Board,LineDest/N,Piece), member(Piece,['Q','T','B','H']);
 	Player == 1 -> charToInt(ColumnDest,N), getPiece(Board,LineDest/N,Piece), member(Piece,['q','t','b','h'])
 ).
 
-movePiece(Board, Column, Line, Piece, RetBoard) :- 
+movePiece(Board, Column, Line, Piece, RetBoard) :-
 charToInt(Column,Col),
 swapFirstPiece(Board,1,Col,Line,Piece, RetBoard).
 
@@ -101,10 +101,10 @@ swapFirstPiece([],_,_,_,_,[]).
 
 swapFirstPiece([Board|Rest],Line,Col,Line,PieceToReplace,[L|RetBoard]) :-
 NextLine is Line+1,
-swapPieceOnLine(Board,Col,PieceToReplace,L), 
+swapPieceOnLine(Board,Col,PieceToReplace,L),
 swapFirstPiece(Rest,NextLine,Col,Line,PieceToReplace,RetBoard).
 
-swapFirstPiece([Board|Rest],CurrLine,Col,Line,PieceToReplace,[Board|RetBoard]) :- 
+swapFirstPiece([Board|Rest],CurrLine,Col,Line,PieceToReplace,[Board|RetBoard]) :-
 NextLine is CurrLine+1,
 swapFirstPiece(Rest,NextLine,Col,Line,PieceToReplace,RetBoard).
 
@@ -113,17 +113,17 @@ gameOver(Board,Winner):-
 
 gameOver(Board,Winner):-
 		\+checkIfWhitePlayerHasPieces(Board), write('Winner is Player 1 (Black Pieces, upper case).'), nl, Winner is 1, abort.
-        
+
 checkIfBlackPlayerHasPieces(Board):-
-				pieceExistsOnBoard('Q', Board); 
-				pieceExistsOnBoard('H', Board); 
-				pieceExistsOnBoard('B', Board); 
+				pieceExistsOnBoard('Q', Board);
+				pieceExistsOnBoard('H', Board);
+				pieceExistsOnBoard('B', Board);
 				pieceExistsOnBoard('T', Board).
 
 
 checkIfWhitePlayerHasPieces(Board):-
 				pieceExistsOnBoard('q', Board);
-				pieceExistsOnBoard('h', Board); 
+				pieceExistsOnBoard('h', Board);
 				pieceExistsOnBoard('b', Board);
 				pieceExistsOnBoard('t', Board).
 
@@ -134,31 +134,20 @@ pieceExistsOnBoard(P, [_|T]):-
 	pieceExistsOnBoard(P,T).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&%%%%
 
 
+getPiecesThroughBoardLine(_,_,9).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+getPiecesThroughBoardLine(Board,Player,Line):-
+	getPiecesAuxThroughCol(Board,Player,Line),
+	LineAux is Line + 1,
+	getPiecesThroughBoardLine(Board,Player,LineAux).
 
-/*
-getPiecesThroughBoardLine(_,_,9,_,_).
-getPiecesThroughBoardLine(Board,Player,Line,Value,NewValue):- 
-	%write('Value BoardLine: '), write(Value), nl,
-	%write('NewValue BoardLine: '), write(NewValue), nl,
-	getPiecesAuxThroughCol(Board,Player,Line,1,Value,NewValue),
-	%write('NewValue AfterAuxThroughCol: '), write(NewValue), nl,
-	LineAux is Line + 1, 
-	getPiecesThroughBoardLine(Board,Player,LineAux,Value,NewValue).
-
-getPiecesAuxThroughCol(_,_,_,9,_,_).
-getPiecesAuxThroughCol(Board,Player,Line,Column,Value,NewValue):-
-	%write('Value auxCol: '), write(Value), nl,
-	%write('NewValue auxCol: '), write(NewValue), nl,
-	intToChar(Column,ColumnChar),  
+getPiecesAuxThroughCol(_,_,_,9).
+getPiecesAuxThroughCol(Board,Player,Line,Column):-
+	intToChar(Column,ColumnChar),
 	getPiece(Board,Line/Column,Piece),
-	%write('Line: '), write(Line), nl,
-	%write('Column: '), write(Column), nl, 
-	%write('Peca: '), write(Piece), nl,
-	%write('Before getAllPossibilities'), nl,
 	(
 		Player == 1 -> (
 							isBlackPiece(Piece),
@@ -175,21 +164,15 @@ getPiecesAuxThroughCol(Board,Player,Line,Column,Value,NewValue):-
 							isAValidPlay(Board,Player,NewList,Value,NewValue)
 						)
 	),
-	ColumnAux is Column + 1, 	
-	getPiecesAuxThroughCol(Board, Player, Line,ColumnAux,Value,NewValue).
+	ColumnAux is Column + 1,
+	getPiecesAuxThroughCol(Board, Player, Line, ColumnAux).
 
-getPiecesAuxThroughCol(Board,Player,Line,Column,Value,NewValue):-
-	ColumnAux is Column + 1, 	
-	getPiecesAuxThroughCol(Board,Player,Line,ColumnAux,Value,NewValue).
-
-%getPiecesAuxThroughCol(Board,Line,Column,Value).
-%	Value \= 0.
 
 getAllPossibilities(Board,Player,LineOrigin,ColumnOrigin,Piece,PossiblePlays):-
 	(
 		Player == 1 -> (
-								isBlackHorse(Piece) -> 
-								( 
+								isBlackHorse(Piece) ->
+								(
 									checkHorseMovement(Board,ColumnOrigin,LineOrigin,1,1,Poss),
 									write('Possibilities of Black Horse: '), write(Poss), nl,
 									append(Poss,[],PossiblePlays)
@@ -216,34 +199,34 @@ getAllPossibilities(Board,Player,LineOrigin,ColumnOrigin,Piece,PossiblePlays):-
 								  	append(Possf15,[],PossiblePlays),
 						  			write('Possibilites of Black Tower'), write(PossiblePlays), nl
 						  		);
-								isBlackBishop(Piece) -> 
+								isBlackBishop(Piece) ->
 								(
-									%top left corner
-		                  			checkBishopMovement(Board,ColumnOrigin,LineOrigin,'A',1,Possf15),
-		                  			%top right corner
-		                  			checkBishopMovement(Board,ColumnOrigin,LineOrigin,'H',1,Possf16),
-		                  			%bottom left corner
-		                  			checkBishopMovement(Board,ColumnOrigin,LineOrigin,'A',8,Possf17),
-		                  			%bottom right corner
-		                  			checkBishopMovement(Board,ColumnOrigin,LineOrigin,'H',8,Possf18),
+										%top left corner
+		                checkBishopMovement(Board,ColumnOrigin,LineOrigin,'A',1,Possf15),
+		                %top right corner
+		                checkBishopMovement(Board,ColumnOrigin,LineOrigin,'H',1,Possf16),
+		                %bottom left corner
+		                checkBishopMovement(Board,ColumnOrigin,LineOrigin,'A',8,Possf17),
+		                %bottom right corner
+		                checkBishopMovement(Board,ColumnOrigin,LineOrigin,'H',8,Possf18),
 
-				                  	append(Possf15,Possf16,Passf20),
-				                  	append(Possf17,Possf20,Passf21),
-				                  	append(Possf18,Possf21,Passf22),
-				                  	append(Passf22,[],PossiblePlays),
-				                  	write('Possibilites of Black Bishop'), write(PossiblePlays), nl
+                  	append(Possf15,Possf16,Passf20),
+                  	append(Possf17,Possf20,Passf21),
+                  	append(Possf18,Possf21,Passf22),
+                  	append(Passf22,[],PossiblePlays),
+                  	write('Possibilites of Black Bishop'), write(PossiblePlays), nl
 								);
 								isBlackQueen(Piece) -> append([],[],PossiblePlays)
-								
+
 						);
 		Player == 2 ->  (
-								isWhiteHorse(Piece) -> 
-								( 
+								isWhiteHorse(Piece) ->
+								(
 									checkHorseMovement(Board,ColumnOrigin,LineOrigin,1,1,Poss),
 									write('Possibilities of White Horse: '), write(Poss), nl,
 									append(Poss,[],PossiblePlays)
 								);
-								isWhiteTower(Piece) -> 
+								isWhiteTower(Piece) ->
 								(
 						  			%upper vertical movement
 						  			checkTowerMovement(Board,ColumnOrigin,LineOrigin,ColumnOrigin,1,HPoss9,VPoss9), append(HPoss9,VPoss9,Possf9),
@@ -264,7 +247,7 @@ getAllPossibilities(Board,Player,LineOrigin,ColumnOrigin,Piece,PossiblePlays):-
 								  	append(Possf15,[],PossiblePlays),
 						  			write('Possibilites of White Tower'), write(PossiblePlays), nl
 						  		);
-								isWhiteBishop(Piece) -> 
+								isWhiteBishop(Piece) ->
 								(
 									%top left corner
 		                  			checkBishopMovement(Board,ColumnOrigin,LineOrigin,'A',1,Possf15),
@@ -296,37 +279,18 @@ isAValidPlay(Board,Player,[Head|Tail],Value,NewValue):-
 	getPiece(Board,LineObtained/ColumnObtained,Piece),
 	%write('Peca dentro de isAValidPlay:      '), write(Piece), nl,
 	(
-		Player == 1 -> 
+		Player == 1 ->
 		(
-			ifElse(isWhitePiece(Piece),AuxValue is Value+1,AuxValue is Value), %ifElse(condi,then,else)
+			ifThenElse(isWhitePiece(Piece),AuxValue is Value+1,AuxValue is Value),
 				NewValue is AuxValue,
 				%write('Value after if is enemy peice: '), write(AuxValue), nl,
 				isAValidPlay(Board,Player,Tail,AuxValue,NewValue)
 		);
 		Player == 2 ->
 		(
-			ifElse(isBlackPiece(Piece),AuxValue is Value+1,AuxValue is Value),
+			ifThenElse(isBlackPiece(Piece),AuxValue is Value+1,AuxValue is Value),
 				NewValue is AuxValue,
 				%write('Value after if is enemy peice: '), write(AuxValue), nl,
 				isAValidPlay(Board,Player,Tail,AuxValue,NewValue)
 		)
 	).
-	
-isAValidPlay(Board,Player,[Head|Tail],Value,NewValue):-
-	isAValidPlay(Board,Player,Tail,Value,NewValue).
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

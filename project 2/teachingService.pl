@@ -1,9 +1,9 @@
 :- use_module(library(lists)).
-:- consult(utils).
-:- consult(movements).
-:- consult(menu).
-:- consult(bot).
-:- use_module(library(random)).
+:- use_module(library(clpfd)).
+
+:- include('utils.pl').
+:- include('database.pl').
+
 
 % Project Explanation
 % Distribuição de Serviço Docente
@@ -27,15 +27,34 @@ de forma a que seja possível resolver problemas desta classe com diferentes par
 professores de cada tipo e áreas científicas, bem como as preferências dos professores.
 */
 
-startProgram :-
-	repeat,
-		clearScreen,
-		readStartMenu(Option).
+/*
 
-% Ask user which option to take 1-2
-readStartMenu(Option) :-
+uma unidade curricular(UC) tem horas teoricas (HT) e horas praticas (HP), (HP > HT).
+UCs tem areas cientificas
+
+
+Aulas teoricas atribuidas -> profs da area científica
+aulas praticas atribuidas -> profs da area cientifica (preferencialmente)
+
+Profs -> tem areas cientificas
+Profs -> catedraticos, auxiliares e associados (tipo)
+Profs -> carga horaria entre 7h e 9h semanais na media dos 2 semestres ( a diferença da carga horaria entre os 2 semestres e indicado na pref do Prof)
+
+Variaveis a variar :
+
+numero de UCs
+horas a leccionar
+numero de profs de cada tipo e area cientifica
+preferencias dos profs
+
+MUDA-SE NA BASE DE DADOS EZ
+*/
+
+
+teachingService(N_CurricularUnits, N_LectureHours, N_Professors) :-
+	clearScreen,
+	welcomeMessage.
+
+% Welcome Message
+welcomeMessage :-
 	nl, write('----- Teaching Service Distribution -----'), nl, nl.
-	write('1 -> Start'), nl,
-	write('2 -> Exit'), nl,
-	write('> '), read(Option),
-	Option >= 1, Option =< 2.

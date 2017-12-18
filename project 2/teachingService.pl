@@ -53,7 +53,12 @@ MUDA-SE NA BASE DE DADOS EZ
 
 teachingService(N_CurricularUnits, N_LectureHours, N_Professors) :-
 	clearScreen,
-	welcomeMessage.
+	welcomeMessage,
+
+	%criar listas
+
+	%impor dominios
+
 
 % Welcome Message
 welcomeMessage :-

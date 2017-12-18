@@ -18,10 +18,11 @@ professor(2, 'Josefina', 2, associado, 0).
 professor(3, 'Bonifacio', 3, auxiliar, 100).
 professor(4, 'Gertrudes', 5, catedratico, 50).
 professor(5, 'Tony Stark', 12, auxiliar, 100).
-professor(6, 'Ricardo', 9, associado, 50).
+professor(6, 'Ricardo', 9, associado, 0).
 professor(7, 'Henrique', 10, associado, 50).
-professor(8, 'Jorge', 7, catedratico, 50).
+professor(8, 'Jorge', 7, catedratico, 100).
 professor(9, 'Souto', 11, associado, 50).
+professor(10, 'Trump', 9, auxiliar, 0)
 
 %unidadeCurricular(id, nome, horasTeoricas, horasPraticas, idAreaCientifica, idProfessorAssociado)
 unidadeCurricular(1, 'Relacoes Publicas', [3], [4, 4, 2], 1, 1).
@@ -43,6 +44,7 @@ unidadeCurricular(16, 'Laboratorio de Computadores', [1,1], [3,3,3,3], 11, 9).
 unidadeCurricular(17, 'Microprocessadores', [2,2], [2,2,2], 11, 9).
 unidadeCurricular(18, 'Desenho e Análise de Algoritmos', [2], [1,1,1], 10, 7).
 unidadeCurricular(19, 'Compiladores', [3], [2,2,2,2], 11, 9).
+unidadeCurricular(20, 'Ordenacao Territorial', [2], [2,2,2,2], 9, 10).
 
 %tipoProfessor(tipo, cargaHoraria)
 tipoProfessor(catedratico, 7).

@@ -50,6 +50,7 @@ MUDA-SE NA BASE DE DADOS EZ
 servicoDocente(N_UnidadesCurriculares, N_Professores) :-
 	clearScreen,
 	nl, write('----- Distribuicao de Servico Docente -----'), nl, nl.
+
 	%criar listas
 
 	%impor dominios

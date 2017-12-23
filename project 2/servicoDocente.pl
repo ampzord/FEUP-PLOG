@@ -3,7 +3,7 @@
 :- use_module(library(clpfd)).
 
 :- include('utils.pl').
-:- include('base_de_dados.pl').
+:- include('big_base_de_dados.pl').
 
 /* ------------------------------------------------------------------ Getters ------------------------------------------------------------------ */
 
@@ -28,20 +28,6 @@ getProfessorListaDeTodasUCs_Semestre2(ListaDeHorasPra_HorasTeo):-
 	findall([_,_], unidadeCurricular2(_A, _B, _C, _D, _E), ListaDeHorasPra_HorasTeo).
 
 /* ------------------------------------------------------------------ Getters ------------------------------------------------------------------ */
-
-% Por cada UC que existe cria uma lista de [HP,HT] variaveis nao instancias que simbolizam as horas que um professor
-% vai dar aulas à respectiva UC.
-matrizSolucao_Semestre1(Linha, Linha, []).
-matrizSolucao_Semestre1(CurrLinha, MaxLinha, [Head | Tail]):-
-	getProfessorListaDeTodasUCs_Semestre1(Head),
-	NewLinha is CurrLinha + 1,
-	matrizSolucao_Semestre1(NewLinha, MaxLinha, Tail).
-
-matrizSolucao_Semestre2(Linha, Linha, []).
-matrizSolucao_Semestre2(CurrLinha, MaxLinha, [Head | Tail]):-
-	getProfessorListaDeTodasUCs_Semestre2(Head),
-	NewLinha is CurrLinha + 1,
-	matrizSolucao_Semestre2(NewLinha, MaxLinha, Tail).
 
 /* ------------------------------------------------------------------ Restrições ------------------------------------------------------------------ */
 
@@ -141,6 +127,21 @@ restrictUCArea2_Semestre2(_, _, _, 0).
 
 /* ------------------------------------------------------------------ Restrições ------------------------------------------------------------------ */
 
+
+% Por cada UC que existe cria uma lista de [HP,HT] variaveis nao instancias que simbolizam as horas que um professor
+% vai dar aulas à respectiva UC.
+matrizSolucao_Semestre1(Linha, Linha, []).
+matrizSolucao_Semestre1(CurrLinha, MaxLinha, [Head | Tail]):-
+	getProfessorListaDeTodasUCs_Semestre1(Head),
+	NewLinha is CurrLinha + 1,
+	matrizSolucao_Semestre1(NewLinha, MaxLinha, Tail).
+
+matrizSolucao_Semestre2(Linha, Linha, []).
+matrizSolucao_Semestre2(CurrLinha, MaxLinha, [Head | Tail]):-
+	getProfessorListaDeTodasUCs_Semestre2(Head),
+	NewLinha is CurrLinha + 1,
+	matrizSolucao_Semestre2(NewLinha, MaxLinha, Tail).
+
 getHorasPref_Semestre1(ProfID, HoursFirstSemester) :-
 	professor(ProfID, ProfName, _ProfArea, ProfTypeID, ProfDistributionPreference),
 	tipoProfessor(ProfTypeID, _, Hours),
@@ -153,23 +154,6 @@ getHorasPref_Semestre2(ProfID, HoursSecondSemester) :-
 	TotalHours is Hours * 2,
 	HoursSecondSemester is ProfDistributionPreference * TotalHours.
 
-
-
-getTotalClassHours(ClassID, PracticalHours, TheoricalHours) :-
-	unidadeCurricular(ClassID, _, _, _, PracticalHoursList, TheoricalHoursList),
-	sumlist(PracticalHoursList, TotalPracticalHours),
-	sumlist(TheoricalHoursList, TotalTheoricalHours).
-
-getMinPracticalClassTime(ClassID, MinTime) :-
-	unidadeCurricular(ClassID, _, _, _, PracticalHoursList, _),
-	min_list(PracticalHoursList, MinTime).
-
-getMinTheoricalClassTime(ClassID, MinTime) :-
-	unidadeCurricular(ClassID, _, _, _, _, TheoricalHoursList),
-	min_list(TheoricalHoursList, MinTime).
-
-
-
 createProfessorPrefHorasIdeais(ID_Prof, [[HorasSemestre_1, HorasSemestre_2] | Tail]) :-
 	getHorasPref_Semestre1(ID_Prof, HorasSemestre_1),
 	getHorasPref_Semestre2(ID_Prof, HorasSemestre_2),
@@ -178,18 +162,18 @@ createProfessorPrefHorasIdeais(ID_Prof, [[HorasSemestre_1, HorasSemestre_2] | Ta
 
 createProfessorPrefHorasIdeais(_, []).
 
-appendHours([], [], []).
-appendHours([H|T], [C|S], [[A, B]|L]) :-
-	A #= 100 * H,
-	B #= 100 * C,
-	appendHours(T, S, L).
+appendHoras2Semestres([], [], []).
+appendHoras2Semestres([Head_Horas_Semestre1 | Tail_HorasSemestre1], [Head_Horas_Semestre2 | Tail_HorasSemestre2], [[NewHours1, NewHours2]| NewList]) :-
+	NewHours1 #= 100 * Head_Horas_Semestre1,
+	NewHours2 #= 100 * Head_Horas_Semestre2,
+	appendHoras2Semestres(Tail_HorasSemestre1, Tail_HorasSemestre2, NewList).
 
-countValueHoursDiff([],[], 0).
-countValueHoursDiff([Hg | Tg], [Hi | Ti], Sum) :-
-	countValueHoursDiff(Tg, Ti, NewSum),
-	Sum #= NewSum + abs(Hg - Hi).
 
-/*
+countHorasDiff([],[], 0).
+countHorasDiff([Head_HorasAtuaisProfs | Tail_HorasAtuaisProfs], [Head_HorasIdeais | Tail_HorasIdeais], Soma) :-
+	countHorasDiff(Tail_HorasAtuaisProfs, Tail_HorasIdeais, NewSoma),
+	Soma #= NewSoma + abs(Head_HorasAtuaisProfs - Head_HorasIdeais).
+
 showSolucao([], _, _).
 showSolucao([Head | Tail], ProfAtual, 1) :-
 	professor(ProfAtual, NomeProf, AreaProf, TipoProf, _),
@@ -223,10 +207,11 @@ aulasSegundoSemestre([[HorasPraticas,HorasTeoricas]|Tail], UCAtual) :-
 	write('        '), write(NomeUC),  write(': '), 
 	write(' Horas praticas: '), write(HorasPraticas), write(' | '), write(' Horas teoricas: '), write(HorasTeoricas),  nl,
 	NextClass is UCAtual + 1,
-	aulasSegundoSemestre(Tail, NextClass).*/
+	aulasSegundoSemestre(Tail, NextClass).
 
 servicoDocente :-
-	
+	clrScrn,
+	title,
 	%Buscar informação à base de dados
 	getListaDeProfessores(ListaDeProfs),
 
@@ -264,33 +249,27 @@ servicoDocente :-
 	restrictProfessorCargaTotal(HorasProfessores_Semestre1, HorasProfessores_Semestre2, 1),
 	
 
-	%-------------
+	appendHoras2Semestres(HorasProfessores_Semestre1, HorasProfessores_Semestre2, HorasProfs_2_SemestresAux),
+	createProfessorPrefHorasIdeais(1, HorasIdeaisAux),
 
-	appendHours(HorasProfessores_Semestre1, HorasProfessores_Semestre2, Horas_2_Semestres),
+	% Flatten
+	append(HorasProfs_2_SemestresAux, HorasProfs2Semestres), 
+	append(HorasIdeaisAux, HorasIdeais), 
 
-	createProfessorPrefHorasIdeais(1, HorasIdeais),
-	
-	append(Horas_2_Semestres, GPH),
-	append(HorasIdeais, IH),
+	countHorasDiff(HorasProfs2Semestres, HorasIdeais, ValorMinimo),
 
-	countValueHoursDiff(GPH, IH, ValueMin),
-	ValueToMinimize #= ValueMin + Contador_ForaDaAreaCientifica_Semestre1*100 + Contador_ForaDaAreaCientifica_Semestre2*100,
-
-
+	ValorParaMinimizar #= ValorMinimo + Contador_ForaDaAreaCientifica_Semestre1*100 + Contador_ForaDaAreaCientifica_Semestre2*100,
 	statistics(walltime, _),
-	labeling([time_out(30000, _), minimize(ValueToMinimize)], MatrizSolFlatten),
+	labeling([time_out(30000, _), minimize(ValorParaMinimizar)], MatrizSolFlatten),
 	statistics(walltime, [_ | [TempoExecucao]]),
 
-	/*
 	write('Primeiro Semestre'), nl,
 	write('================='), nl,nl,
 	showSolucao(MatrizSol_Semestre1, 1, 1), nl,
 	
 	write('Segundo Semestre'), nl,
 	write('================'), nl,nl,
-	showSolucao(MatrizSol_Semestre2, 1, 2).*/
+	showSolucao(MatrizSol_Semestre2, 1, 2),
 	
-	write(MatrizSol_Semestre1), nl,
-	write(MatrizSol_Semestre2),nl,
 	write('Tempo execucao: '), write(TempoExecucao), write(' milisegundos.').
 

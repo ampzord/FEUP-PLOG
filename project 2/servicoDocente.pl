@@ -3,13 +3,13 @@
 :- use_module(library(clpfd)).
 
 :- include('utils.pl').
-:- include('big_base_de_dados.pl').
+:- include('small_base_de_dados.pl').
 
 /* ------------------------------------------------------------------ Getters ------------------------------------------------------------------ */
 
 % Lista com todos os professores
 getListaDeProfessores(ListaDeProfs):-
-	setof([ID, Nome, AreaCientifica, TipoProfessor, PreferenciaHoraria], professor(ID, Nome, AreaCientifica, TipoProfessor, PreferenciaHoraria), ListaDeProfs).
+	findall([ID, Nome, AreaCientifica, TipoProfessor, PreferenciaHoraria], professor(ID, Nome, AreaCientifica, TipoProfessor, PreferenciaHoraria), ListaDeProfs).
 
 % Lista com todas as UCs - Semestre 1
 getListaDeUCs_Semestre1(ListaDeUCs_Semestre1):-
@@ -21,11 +21,11 @@ getListaDeUCs_Semestre2(ListaDeUCs_Semestre2):-
 
 %Cria por cada unidadeCurricular - Semestre 1 uma lista com 2 variaveis nao instanciadas [Horas Praticas, Horas Teoricas]
 getProfessorListaDeTodasUCs_Semestre1(ListaDeHorasPra_HorasTeo):-
-	findall([_,_], unidadeCurricular(_A, _B, _C, _D, _E), ListaDeHorasPra_HorasTeo).
+	findall([_,_], unidadeCurricular(_, _, _, _, _), ListaDeHorasPra_HorasTeo).
 
 %Cria por cada unidadeCurricular - Semestre 2 uma lista com 2 variaveis nao instanciadas [Horas Praticas, Horas Teoricas]
 getProfessorListaDeTodasUCs_Semestre2(ListaDeHorasPra_HorasTeo):-
-	findall([_,_], unidadeCurricular2(_A, _B, _C, _D, _E), ListaDeHorasPra_HorasTeo).
+	findall([_,_], unidadeCurricular2(_, _, _, _, _), ListaDeHorasPra_HorasTeo).
 
 /* ------------------------------------------------------------------ Getters ------------------------------------------------------------------ */
 
